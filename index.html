@@ -6,7 +6,7 @@
     <title>Sentence Builder</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Font: Balsamiq Sans -->
+    <!-- Google Fonts: Balsamiq Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -14,320 +14,337 @@
             box-sizing: border-box;
         }
         body {
-            background: linear-gradient(135deg, #6b3ba7 0%, #8b5cf6 50%, #7c3aed 100%);
-            color: #1e1b4b;
+            background: linear-gradient(135deg, #3b0764 0%, #581c87 50%, #6b21a8 100%);
+            color: #2e1065;
             user-select: none;
-            width: 100vw;
-            height: 100vh;
             overflow: hidden;
-            margin: 0;
-            padding: 0;
+            touch-action: manipulation;
         }
 
-        /* Dashed drop slots matching reference wireframe with light periwinkle touch */
-        .drop-slot {
-            min-height: 85px;
-            min-width: 120px;
-            border: 3px dashed #4c1d95;
-            border-radius: 22px;
-            transition: all 0.2s ease;
-            background-color: #ffffff;
-        }
-        .drop-slot.drag-over {
-            border-color: #ff5e62;
-            background-color: #e0e7ff;
-            transform: scale(1.02);
-        }
-
-        /* Greyish-Blue & Light Purple Word Cards as requested */
+        /* Responsive word tiles with light greyish-blue & purple tones */
         .word-tile {
             cursor: pointer;
-            background: linear-gradient(180deg, #e0e8f5 0%, #c8d6ed 100%);
-            color: #1e1b4b;
-            font-weight: 700;
-            border: 2.5px solid #4338ca;
-            border-radius: 20px;
-            padding: 10px 22px;
-            font-size: 2.1rem;
-            line-height: 1;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
             transition: transform 0.12s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            touch-action: none;
         }
         .word-tile:hover {
-            transform: translateY(-2px) scale(1.03);
-            background: linear-gradient(180deg, #d3e0f5 0%, #b8ccf0 100%);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+            transform: translateY(-2px) scale(1.02);
         }
         .word-tile:active {
-            transform: translateY(1px) scale(0.97);
+            transform: translateY(1px) scale(0.98);
         }
 
-        /* Container Panels with soft periwinkle framing */
-        .panel-box {
+        /* Dashed Drop Slot Targets */
+        .drop-slot {
+            min-height: 52px;
+            min-width: 90px;
+            border: 3px dashed #9333ea;
             background-color: #ffffff;
-            border: 4px solid #4338ca;
-            border-radius: 24px;
-            box-shadow: 0 8px 20px rgba(30, 27, 75, 0.2);
+            transition: all 0.2s ease;
+        }
+        @media (min-height: 700px) {
+            .drop-slot {
+                min-height: 64px;
+                min-width: 105px;
+            }
+        }
+        .drop-slot.drag-over {
+            border-color: #581c87;
+            background-color: #f3e8ff;
+            transform: scale(1.04);
         }
 
-        .header-pill {
-            background-color: #f3f4f6;
-            border: 2px solid #312e81;
-            border-radius: 16px;
-            padding: 4px 14px;
-            font-weight: 700;
+        /* Custom smooth scrollbar if modal content exceeds */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(233, 213, 255, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a855f7;
+            border-radius: 10px;
         }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex flex-col justify-between p-3 md:p-5">
+<body class="h-screen w-screen overflow-hidden flex flex-col justify-between p-2 sm:p-3 md:p-4">
 
-    <!-- ================= VIEW 1: ACCESS CODE ================= -->
-    <main id="view-access" class="w-full max-w-2xl mx-auto my-auto flex flex-col justify-center items-center panel-box p-8 shadow-2xl space-y-6">
-        <div class="space-y-3 text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-950">SENTENCE BUILDER</h1>
-            <p class="text-indigo-700 text-xl font-bold">Enter your access code to start</p>
-        </div>
-        
-        <div class="w-full space-y-4 max-w-md">
-            <div>
-                <input type="text" id="access-code-input" placeholder="HWG5R1" 
-                       class="w-full px-6 py-4 text-center text-3xl font-extrabold uppercase tracking-widest border-4 border-indigo-950 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-300 bg-indigo-50 text-indigo-950">
-                <p id="access-error" class="text-rose-600 text-lg font-bold mt-2 text-center hidden"></p>
+    <!-- ================= VIEW 1: ACCESS CODE ENTRY ================= -->
+    <div id="view-access" class="w-full h-full max-w-xl mx-auto flex flex-col items-center justify-center space-y-5 text-center p-4">
+        <div class="bg-white/95 backdrop-blur-md w-full p-6 sm:p-8 rounded-3xl shadow-2xl border-4 border-purple-300 space-y-6">
+            <div class="space-y-2">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-purple-950 tracking-wide">SENTENCE BUILDER</h1>
+                <p class="text-purple-700 text-base sm:text-lg font-bold">Enter your access code to start your challenge!</p>
             </div>
-            <button onclick="handleLogin()" 
-                    class="w-full py-4 bg-gradient-to-r from-coral-400 to-rose-500 bg-[#ff5e62] hover:bg-[#ff4348] text-white font-extrabold text-2xl rounded-2xl border-4 border-indigo-950 shadow-md transition transform active:scale-95">
-                Start Learning 🚀
-            </button>
+            
+            <div class="space-y-4">
+                <div>
+                    <input type="text" id="access-code-input" 
+                           class="w-full px-4 py-3 sm:py-4 text-center text-2xl sm:text-3xl font-bold uppercase tracking-widest border-4 border-purple-300 rounded-2xl focus:outline-none focus:border-purple-600 focus:ring-4 focus:ring-purple-200 transition bg-purple-50 text-purple-950">
+                    <p id="access-error" class="text-rose-600 text-base font-bold mt-2 hidden"></p>
+                </div>
+                <button onclick="handleLogin()" 
+                        class="w-full py-3.5 sm:py-4 px-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xl sm:text-2xl rounded-2xl shadow-xl transition transform active:scale-95">
+                    Start Learning 🚀
+                </button>
+            </div>
         </div>
+    </div>
 
+    <!-- ================= VIEW 2: GAMEPLAY (SINGLE CONSOLIDATED TOP HEADER) ================= -->
+    <div id="view-game" class="hidden w-full h-full flex-col justify-between max-w-[1300px] mx-auto gap-2 sm:gap-3">
         
-    </main>
-
-    <!-- ================= VIEW 2: MAIN GAMEPLAY (SINGLE TOP HEADER + BOARD) ================= -->
-    <main id="view-game" class="hidden w-full max-w-[1300px] h-full mx-auto flex-col justify-between space-y-3 py-1 overflow-hidden">
-        
-        <!-- 1. CONSOLIDATED SINGLE TOP HEADER PANEL -->
-        <header class="panel-box w-full p-3 px-6 flex flex-col justify-between shadow-md flex-shrink-0 space-y-2">
-            <!-- Row 1: Title, Level, Set, Code Badges -->
-            <div class="flex items-center justify-between text-lg md:text-xl font-extrabold text-indigo-950 border-b-2 border-indigo-100 pb-2 gap-2">
-                <div class="text-2xl md:text-3xl font-extrabold tracking-wide text-indigo-950">SENTENCE BUILDER</div>
-                <div class="flex items-center gap-2 md:gap-4">
-                    <span id="header-level" class="header-pill text-indigo-900">Level 1</span>
-                    <span id="header-set" class="header-pill text-indigo-900">Set: Weather & Feelings</span>
-                    <span class="header-pill text-indigo-950">CODE: <span id="header-code">HWG5R1</span></span>
+        <!-- TOP CONSOLIDATED HEADER PANEL -->
+        <header class="w-full bg-white rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 border-3 sm:border-4 border-[#9d8ec7] shadow-lg flex flex-col justify-between gap-2 shrink-0">
+            <!-- Row 1: Title & Info Badges -->
+            <div class="flex items-center justify-between flex-wrap gap-2 border-b border-purple-100 pb-2">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <span class="text-xl sm:text-2xl md:text-3xl font-black text-purple-950 tracking-tight">SENTENCE BUILDER</span>
+                    <span id="level-badge" class="bg-purple-100 border-2 border-purple-300 text-purple-950 font-black px-3 py-1 rounded-full text-sm sm:text-base">Level 1</span>
+                </div>
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <span id="set-badge" class="bg-purple-50 border border-purple-200 text-purple-900 font-bold px-3 py-1 rounded-xl text-xs sm:text-sm">Set: -</span>
+                    <span id="code-badge" class="bg-purple-900 text-white font-black px-3 py-1 rounded-xl text-xs sm:text-sm tracking-wider">CODE: -</span>
                 </div>
             </div>
 
-            <!-- Row 2: Speaker, Instruction, Question Index Badge -->
-            <div class="flex items-center justify-between pt-0.5">
-                <div class="flex items-center gap-4 flex-1">
-                    <!-- Audio Button (Vibrant Coral Orange Circle) -->
+            <!-- Row 2: Speaker Audio Button, Instructions & Question Counter -->
+            <div class="flex items-center justify-between gap-3 pt-0.5">
+                <div class="flex items-center gap-2 sm:gap-4 flex-1">
+                    <!-- Coral Orange / Reddish-Pink Circular Speaker Button -->
                     <button id="audio-btn" onclick="playTargetSentenceAudio()" 
-                            class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-[#ff5e62] to-[#ff9966] hover:from-[#ff4348] hover:to-[#ff8547] text-white flex items-center justify-center border-3 border-indigo-950 shadow-md transition transform active:scale-90"
+                            class="shrink-0 flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 bg-gradient-to-tr from-[#ff5e62] to-[#ff9966] hover:from-[#ff4b4f] hover:to-[#ff884d] text-white rounded-full shadow-md active:scale-90 transition-all focus:outline-none ring-2 ring-rose-200"
                             title="Listen to Sentence">
-                        <svg class="w-7 h-7 md:w-8 md:h-8 fill-current" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 fill-current" viewBox="0 0 24 24">
                             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                         </svg>
                     </button>
-                    <!-- Instruction -->
-                    <div id="level-instruction" class="text-xl md:text-2xl font-bold text-indigo-950">
+                    <!-- Instructions -->
+                    <p id="level-instruction" class="text-sm sm:text-lg md:text-xl font-bold text-purple-950 leading-tight">
                         Listen to the sentence, then arrange the word tiles.
-                    </div>
+                    </p>
                 </div>
 
-                <!-- Progress Pill -->
-                <div class="header-pill text-xl md:text-2xl font-extrabold text-indigo-950 px-4 py-1.5 ml-2">
+                <!-- Progress Counter (e.g. 1/10) -->
+                <div class="shrink-0 bg-purple-100 border-2 border-purple-200 px-3 sm:px-4 py-1.5 rounded-2xl font-black text-purple-950 text-base sm:text-xl">
                     <span id="current-q-num">1</span>/<span id="total-q-num">10</span>
                 </div>
             </div>
         </header>
 
-        <!-- 2. CENTRAL WHITE CONTAINER (SENTENCE DROP SLOTS) - NON-SCROLLABLE -->
-        <section class="panel-box w-full flex-1 flex flex-col items-center justify-center p-4 my-1 overflow-hidden relative shadow-md">
-            <div id="feedback-msg" class="absolute top-3 text-2xl md:text-3xl font-extrabold min-h-[36px] text-center"></div>
+        <!-- MAIN CENTER AREA: DASHED SENTENCE TARGET SLOTS (White Box) -->
+        <main id="main-sentence-area" class="w-full flex-1 bg-white rounded-2xl sm:rounded-3xl border-3 sm:border-4 border-[#9d8ec7] shadow-lg p-3 sm:p-6 flex flex-col justify-center items-center overflow-hidden relative min-h-0">
+            <div id="sentence-slots" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 w-full max-h-full overflow-y-auto py-2">
+                <!-- Dashed slots injected dynamically -->
+            </div>
+            <!-- Gentle Inline Feedback Banner -->
+            <div id="feedback-msg" class="absolute bottom-2 font-black text-sm sm:text-lg text-center h-6"></div>
+        </main>
+
+        <!-- BOTTOM WORD BANK & RESET CONTAINER (Light Periwinkle/Lavender Frame) -->
+        <footer class="w-full bg-[#e2dcf7] rounded-2xl sm:rounded-3xl p-3 sm:p-4 border-3 sm:border-4 border-[#9d8ec7] shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <div id="word-bank" class="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 flex-1 w-full">
+                <!-- Word tiles injected dynamically -->
+            </div>
             
-            <div id="sentence-slots" class="flex flex-wrap items-center justify-center gap-3 md:gap-4 p-2 w-full">
-                <!-- Drop Slots inserted dynamically -->
-            </div>
-        </section>
-
-        <!-- 3. BOTTOM WORD BANK & CONTROLS PANEL -->
-        <footer class="panel-box w-full p-4 flex items-center justify-between min-h-[120px] shadow-md flex-shrink-0 relative">
-            <div id="word-bank" class="flex flex-wrap items-center justify-start gap-3 md:gap-4 flex-1">
-                <!-- Dynamic Word Cards -->
-            </div>
-
             <button onclick="resetCurrentQuestion()" 
-                    class="px-6 py-3 bg-[#facc15] hover:bg-[#eab308] text-indigo-950 font-extrabold text-xl md:text-2xl rounded-2xl border-3 border-indigo-950 shadow-sm transition transform active:scale-95 ml-4 flex-shrink-0">
-                Reset
+                    class="shrink-0 bg-amber-400 hover:bg-amber-500 active:bg-amber-600 text-purple-950 font-black px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl border-2 border-amber-500 shadow-md transition text-sm sm:text-base self-end sm:self-center">
+                Reset 🔄
             </button>
         </footer>
-
-    </main>
+    </div>
 
     <!-- ================= VIEW 3: LEVEL COMPLETION ================= -->
-    <main id="view-complete" class="hidden w-full max-w-2xl mx-auto my-auto panel-box p-8 shadow-2xl flex-col space-y-6 text-center">
-        <div class="space-y-2">
-            <h2 id="complete-title" class="text-4xl font-extrabold text-indigo-950">Level Mastered! 🎉</h2>
-            <p id="complete-subtitle" class="text-indigo-700 text-xl font-bold">Great job building your sentences.</p>
-        </div>
+    <div id="view-complete" class="hidden w-full h-full max-w-xl mx-auto flex flex-col items-center justify-center p-4">
+        <div class="bg-white/95 backdrop-blur-md w-full p-6 sm:p-8 rounded-3xl shadow-2xl border-4 border-purple-300 text-center space-y-5">
+            <div class="space-y-1">
+                <h2 id="complete-title" class="text-3xl sm:text-4xl font-black text-purple-950">Level Mastered! 🎉</h2>
+                <p id="complete-subtitle" class="text-purple-700 text-sm sm:text-base font-bold">Awesome work building your sentences.</p>
+            </div>
 
-        <div class="w-full bg-indigo-50 rounded-2xl p-6 border-3 border-indigo-950 space-y-4 text-xl font-bold text-indigo-950">
-            <div class="flex justify-between items-center border-b-2 border-indigo-200 pb-2">
-                <span>Level Score</span>
-                <span id="res-score" class="text-3xl font-extrabold text-indigo-700">0 / 100</span>
+            <div class="bg-purple-50 rounded-2xl p-4 sm:p-5 border-2 border-purple-200 space-y-3 text-left">
+                <div class="flex justify-between items-center border-b border-purple-200 pb-2">
+                    <span class="text-purple-900 text-base font-bold">Level Score</span>
+                    <span id="res-score" class="text-2xl font-black text-purple-700">0 / 100</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-purple-200 pb-2">
+                    <span class="text-purple-900 text-base font-bold">First-Attempt Correct</span>
+                    <span id="res-first-attempt" class="text-xl font-bold text-purple-950">0 / 10</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-purple-900 text-base font-bold">Performance Band</span>
+                    <span id="res-band" class="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-xl text-base">-</span>
+                </div>
             </div>
-            <div class="flex justify-between items-center border-b-2 border-indigo-200 pb-2">
-                <span>First-Attempt Correct</span>
-                <span id="res-first-attempt" class="text-2xl font-extrabold">0 / 10</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span>Performance Band</span>
-                <span id="res-band" class="px-4 py-1.5 bg-emerald-100 text-emerald-900 font-extrabold rounded-xl border-2 border-emerald-900">-</span>
-            </div>
-        </div>
 
-        <div class="flex justify-center gap-4 pt-2">
-            <button onclick="restartCurrentLevel()" 
-                    class="px-6 py-3 bg-indigo-100 hover:bg-indigo-200 text-indigo-950 font-extrabold text-xl rounded-2xl border-3 border-indigo-950 shadow-sm transition">
-                Play Again 🔁
-            </button>
-            <button id="next-level-btn" onclick="advanceNextLevel()" 
-                    class="px-8 py-3 bg-[#ff5e62] hover:bg-[#ff4348] text-white font-extrabold text-2xl rounded-2xl border-3 border-indigo-950 shadow-md transition transform active:scale-95">
-                Next Level ➡️
-            </button>
+            <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+                <button onclick="restartCurrentLevel()" 
+                        class="px-5 py-3 bg-purple-100 hover:bg-purple-200 text-purple-950 font-bold text-base rounded-2xl border border-purple-300 transition">
+                    Play Again (Practice) 🔁
+                </button>
+                <button id="next-level-btn" onclick="advanceNextLevel()" 
+                        class="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-lg rounded-2xl shadow-lg transition transform active:scale-95">
+                    Next Level ➡️
+                </button>
+            </div>
         </div>
-    </main>
+    </div>
 
     <!-- ================= VIEW 4: STUDENT INFO FORM ================= -->
-    <main id="view-form" class="hidden w-full max-w-2xl mx-auto my-auto panel-box p-6 shadow-2xl flex-col space-y-4">
-        <div class="text-center space-y-1">
-            <h2 class="text-3xl font-extrabold text-indigo-950">Assessment Complete! 🏆</h2>
-            <p class="text-indigo-700 text-base font-bold">Please fill in your information to record your score.</p>
+    <div id="view-form" class="hidden w-full h-full max-w-lg mx-auto flex flex-col items-center justify-center p-3">
+        <div class="bg-white/95 backdrop-blur-md w-full p-5 sm:p-7 rounded-3xl shadow-2xl border-4 border-purple-300 space-y-4 max-h-full overflow-y-auto">
+            <div class="text-center space-y-1">
+                <h2 class="text-2xl sm:text-3xl font-black text-purple-950">Mastery Assessment Complete! 🏆</h2>
+                <p class="text-purple-700 text-xs sm:text-sm font-bold">Fill in your information to record your score in the teacher's sheet.</p>
+            </div>
+
+            <!-- Score Summary Box -->
+            <div class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-3 flex justify-around text-center">
+                <div>
+                    <div class="text-xs text-purple-600 font-bold uppercase">Overall Score</div>
+                    <div id="form-summary-score" class="text-2xl sm:text-3xl font-black text-purple-950">0</div>
+                </div>
+                <div>
+                    <div class="text-xs text-purple-600 font-bold uppercase">Performance Band</div>
+                    <div id="form-summary-band" class="text-lg sm:text-xl font-bold text-purple-900">-</div>
+                </div>
+            </div>
+
+            <form id="student-form" onsubmit="handleFormSubmit(event)" class="space-y-3">
+                <!-- School Selection -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-bold text-purple-900 mb-1">School</label>
+                    <select id="input-school" required class="w-full px-3 py-2.5 border-2 border-purple-300 rounded-xl focus:outline-none focus:border-purple-600 bg-white text-purple-950 text-base font-bold">
+                        <option value="">-- Select School --</option>
+                        <option value="Shulin">Shulin</option>
+                        <option value="Cigu">Cigu</option>
+                    </select>
+                </div>
+
+                <!-- Student Name -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-bold text-purple-900 mb-1">Student Name</label>
+                    <input type="text" id="input-name" placeholder="First name, capitalized" required
+                           class="w-full px-3 py-2.5 border-2 border-purple-300 rounded-xl focus:outline-none focus:border-purple-600 text-base font-bold text-purple-950">
+                    <p id="err-name" class="text-rose-600 text-xs font-bold mt-1 hidden">Each name component must begin with a capital letter.</p>
+                </div>
+
+                <!-- Student Number -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-bold text-purple-900 mb-1">Student Number</label>
+                    <input type="text" id="input-number" placeholder="Digits only (e.g. 1024)" required
+                           class="w-full px-3 py-2.5 border-2 border-purple-300 rounded-xl focus:outline-none focus:border-purple-600 text-base font-bold text-purple-950">
+                    <p id="err-number" class="text-rose-600 text-xs font-bold mt-1 hidden">Student number must contain digits only.</p>
+                </div>
+
+                <!-- Class -->
+                <div>
+                    <label class="block text-xs sm:text-sm font-bold text-purple-900 mb-1">Class (e.g. 1A or 6A)</label>
+                    <input type="text" id="input-class" placeholder="Digit followed by uppercase letter" required
+                           class="w-full px-3 py-2.5 border-2 border-purple-300 rounded-xl focus:outline-none focus:border-purple-600 text-base font-bold text-purple-950">
+                    <p id="err-class" class="text-rose-600 text-xs font-bold mt-1 hidden">Class must be formatted as a digit followed by an uppercase letter (e.g. 1A).</p>
+                </div>
+
+                <button type="submit" id="submit-assessment-btn"
+                        class="w-full py-3.5 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg transition transform active:scale-95 text-lg mt-2">
+                    Submit Assessment to Teacher 📤
+                </button>
+            </form>
         </div>
-
-        <!-- Summary -->
-        <div class="bg-indigo-50 border-2 border-indigo-950 rounded-2xl p-3 flex justify-around text-center shadow-sm font-bold">
-            <div>
-                <div class="text-xs text-indigo-700 uppercase">Overall Score</div>
-                <div id="form-summary-score" class="text-3xl font-extrabold text-indigo-950">0</div>
-            </div>
-            <div>
-                <div class="text-xs text-indigo-700 uppercase">Performance Band</div>
-                <div id="form-summary-band" class="text-xl font-extrabold text-indigo-900">-</div>
-            </div>
-        </div>
-
-        <form id="student-form" onsubmit="handleFormSubmit(event)" class="space-y-3 w-full font-bold">
-            <!-- School Selection -->
-            <div>
-                <label class="block text-sm text-indigo-950 mb-1">School</label>
-                <select id="input-school" required class="w-full px-4 py-2.5 border-2 border-indigo-950 rounded-xl focus:outline-none bg-white text-indigo-950 text-lg">
-                    <option value="">-- Select School --</option>
-                    <option value="Shulin">Shulin</option>
-                    <option value="Cigu">Cigu</option>
-                </select>
-            </div>
-
-            <!-- Student Name -->
-            <div>
-                <label class="block text-sm text-indigo-950 mb-1">Student Name (e.g. John Smith)</label>
-                <input type="text" id="input-name" placeholder="First and Last name, capitalized" required
-                       class="w-full px-4 py-2.5 border-2 border-indigo-950 rounded-xl focus:outline-none text-lg text-indigo-950">
-                <p id="err-name" class="text-rose-600 text-xs font-bold mt-0.5 hidden">Each name component must begin with a capital letter.</p>
-            </div>
-
-            <!-- Student Number -->
-            <div>
-                <label class="block text-sm text-indigo-950 mb-1">Student Number</label>
-                <input type="text" id="input-number" placeholder="Digits only (e.g. 1024)" required
-                       class="w-full px-4 py-2.5 border-2 border-indigo-950 rounded-xl focus:outline-none text-lg text-indigo-950">
-                <p id="err-number" class="text-rose-600 text-xs font-bold mt-0.5 hidden">Student number must contain digits only.</p>
-            </div>
-
-            <!-- Class -->
-            <div>
-                <label class="block text-sm text-indigo-950 mb-1">Class (e.g. 1A or 6A)</label>
-                <input type="text" id="input-class" placeholder="Digit followed by uppercase letter" required
-                       class="w-full px-4 py-2.5 border-2 border-indigo-950 rounded-xl focus:outline-none text-lg text-indigo-950">
-                <p id="err-class" class="text-rose-600 text-xs font-bold mt-0.5 hidden">Class must be formatted as a digit followed by an uppercase letter (e.g. 1A).</p>
-            </div>
-
-            <button type="submit" id="submit-assessment-btn"
-                    class="w-full py-3 px-6 bg-[#ff5e62] hover:bg-[#ff4348] text-white font-extrabold text-xl rounded-2xl border-3 border-indigo-950 shadow-md transition transform active:scale-95">
-                Submit Assessment to Teacher 📤
-            </button>
-        </form>
-    </main>
+    </div>
 
     <!-- ================= VIEW 5: SUBMISSION SUCCESS ================= -->
-    <main id="view-success" class="hidden w-full max-w-xl mx-auto my-auto panel-box p-8 shadow-2xl flex-col space-y-4 text-center">
-        <div class="w-16 h-16 bg-emerald-100 border-2 border-emerald-900 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-3xl font-extrabold">✓</div>
-        <div class="space-y-1">
-            <h2 class="text-3xl font-extrabold text-indigo-950">Successfully Submitted!</h2>
-            <p class="text-indigo-700 text-base font-bold">Your scores have been safely recorded.</p>
+    <div id="view-success" class="hidden w-full h-full max-w-lg mx-auto flex flex-col items-center justify-center p-4">
+        <div class="bg-white/95 backdrop-blur-md w-full p-6 sm:p-8 rounded-3xl shadow-2xl border-4 border-purple-300 text-center space-y-4">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-black">✓</div>
+            <div class="space-y-1">
+                <h2 class="text-2xl sm:text-3xl font-black text-purple-950">Successfully Submitted!</h2>
+                <p class="text-purple-700 text-sm font-bold">Your assessment results are recorded in the teacher's sheet.</p>
+            </div>
+            <div class="bg-purple-50 p-4 rounded-2xl border-2 border-purple-200 text-left space-y-2 text-sm text-purple-900 font-bold">
+                <div><span>Student:</span> <span id="succ-name" class="text-purple-950 font-black"></span></div>
+                <div><span>School:</span> <span id="succ-school" class="text-purple-950 font-black"></span></div>
+                <div><span>Class / Number:</span> <span id="succ-classnum" class="text-purple-950 font-black"></span></div>
+                <div><span>Overall Score:</span> <span id="succ-score" class="font-black text-purple-700"></span></div>
+                <div><span>Performance Band:</span> <span id="succ-band" class="font-black"></span></div>
+            </div>
+            <button onclick="location.reload()" class="px-6 py-3 bg-purple-100 hover:bg-purple-200 text-purple-950 font-black text-base rounded-2xl border border-purple-300 transition">
+                Start New Session 🔄
+            </button>
         </div>
-        <div class="bg-indigo-50 p-4 rounded-2xl border-2 border-indigo-950 text-left space-y-2 text-lg font-bold text-indigo-950 shadow-sm">
-            <div><span>Student:</span> <span id="succ-name"></span></div>
-            <div><span>School:</span> <span id="succ-school"></span></div>
-            <div><span>Class / Number:</span> <span id="succ-classnum"></span></div>
-            <div><span>Overall Score:</span> <span id="succ-score" class="font-extrabold text-indigo-700"></span></div>
-            <div><span>Performance Band:</span> <span id="succ-band" class="font-extrabold"></span></div>
-        </div>
-        <button onclick="location.reload()" class="px-8 py-3 bg-[#facc15] hover:bg-[#eab308] text-indigo-950 font-extrabold text-xl rounded-2xl border-3 border-indigo-950 transition mx-auto">
-            Start New Session 🔄
-        </button>
-    </main>
+    </div>
 
-    <!-- Custom Modal -->
-    <div id="custom-modal" class="fixed inset-0 bg-indigo-950/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="panel-box max-w-sm w-full p-6 space-y-4 text-center">
-            <h3 id="modal-title" class="text-2xl font-extrabold text-indigo-950">Notice</h3>
-            <p id="modal-message" class="text-indigo-800 text-lg font-bold"></p>
-            <button onclick="closeModal()" class="w-full py-3 bg-[#facc15] hover:bg-[#eab308] text-indigo-950 font-extrabold rounded-xl border-2 border-indigo-950 text-lg">
+    <!-- Custom Modal for Messages/Alerts -->
+    <div id="custom-modal" class="fixed inset-0 bg-purple-950/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-center border-4 border-purple-300">
+            <h3 id="modal-title" class="text-2xl font-black text-purple-950">Notice</h3>
+            <p id="modal-message" class="text-purple-800 text-base font-bold"></p>
+            <button onclick="closeModal()" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl transition text-base">
                 OK
             </button>
         </div>
     </div>
 
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        // Google Apps Script Web App Endpoint URL
+        // CONFIGURATION: Google Apps Script Web App URL endpoint for Google Sheets integration
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynWPUPlKV2AGVKtSGJoF_Rxqadqr1-oC1XYWRV7pcj-0Bhyu6x5I9mY7hq5ZmO_s-l/exec"; 
 
         /*
-         * MASTER SENTENCE DATA (HWG5R1)
+         * MASTER SENTENCE SETS DATA OBJECT
+         * Exactly 10 sentences are chosen for each game session.
+         * The SAME 10 sentences are used across Level 1, Level 2, and Level 3!
          */
         const MASTER_SENTENCE_SETS = {
             "HWG5R1": {
-                setName: "Set: Weather & Feelings",
+                setName: "Weather & Feelings",
                 pool: [
                     "It's sunny at Shulin Elementary School.",
-                    "It's rainy at Baoan Temple, and I'm tired.",
+                    "It's rainy, and I'm tired.",
                     "It's windy at the Activity Center.",
                     "It's cloudy in Shulin, and I'm sad.",
-                    "It's hot at Shulin Elementary School, and I'm thirsty.",
-                    "It's cold at Baoan Temple, and I'm hungry.",
-                    "How's the weather? It's sunny, and he's happy.",
-                    "How's the weather? It's rainy, and she's tired.",
+                    "It's hot at Shulin Elementary School",
+                    "It's rainy and cold.",
+                    "It's sunny, and he's happy.",
+                    "It's rainy, and she's tired.",
                     "Are you hungry at school? Yes, I am.",
                     "Are you thirsty? No, I'm not.",
                     "Is he tired? Yes, he is.",
                     "Is she sad? No, she isn't.",
-                    "Is he cold at Baoan Temple? Yes, he is.",
-                    "Is she hungry at the Activity Center? No, she isn't.",
-                    "How's the weather in Shulin? It's warm, and we're happy."
+                    "Is he cold at Bao'an Temple? Yes, he is.",
+                    "Is she hungry? No, she isn't.",
+                    "How's the weather in Shulin Village"
+                ]
+            },
+            "WW7R1": {
+                setName: "Country & Illnesses",
+                pool: [
+                    "What's wrong with Boka?",
+                    "I have a headache.",
+                    "Does she have a stomachache? Yes, she does.",
+                    "Does he have a fever? No, he doesn't.",
+                    "Do you have a cold? Yes, I do.",
+                    "Amy has a sore throat.",
+                    "He has a toothache.",
+                    "The doctor says I have a fever.",
+                    "She is from Australia.",
+                    "He is from Canada.",
+                    "Is he from Japan? No, he isn't.",
+                    "Is she from the U.S.? Yes, she is.",
+                    "Are you from Taiwan? No, I'm not.",
+                    "Are they from the U.K.? Yes, they are.",
+                    "Where are you from? I'm from Taiwan.",
+            
                 ]
             }
         };
 
-        // Game State
+        // Game Runtime State
         let gameState = {
             accessCode: "",
             setName: "",
-            activeSentences: [], // Exactly 10 sentences shared across all 3 levels
+            activeSentences: [], // Exactly 10 sentences used across all 3 levels
             level: 1,
             questionIndex: 0,
             isPractice: false,
@@ -340,7 +357,7 @@
             isEvaluating: false
         };
 
-        // Web Audio Synthesizer
+        // Web Audio Synthesizer for sound effects
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playPopSound() {
@@ -349,14 +366,14 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(450, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.07);
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.06);
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.07);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.07);
+                osc.stop(audioCtx.currentTime + 0.06);
             } catch(e) {}
         }
 
@@ -368,13 +385,13 @@
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
-                    gain.gain.setValueAtTime(0.2, now + i * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+                    osc.frequency.setValueAtTime(freq, now + i * 0.07);
+                    gain.gain.setValueAtTime(0.18, now + i * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.28);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-                    osc.start(now + i * 0.08);
-                    osc.stop(now + i * 0.08 + 0.3);
+                    osc.start(now + i * 0.07);
+                    osc.stop(now + i * 0.07 + 0.28);
                 });
             } catch(e) {}
         }
@@ -387,13 +404,13 @@
                 const gain = audioCtx.createGain();
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(180, now);
-                osc.frequency.setValueAtTime(120, now + 0.1);
+                osc.frequency.setValueAtTime(120, now + 0.08);
                 gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 0.25);
+                osc.stop(now + 0.22);
             } catch(e) {}
         }
 
@@ -402,7 +419,7 @@
             const errEl = document.getElementById("access-error");
 
             if (!MASTER_SENTENCE_SETS[inputVal]) {
-                errEl.textContent = "Invalid access code. Please enter HWG5R1.";
+                errEl.textContent = "Invalid access code. Try HWG5R1 or WW7R1.";
                 errEl.classList.remove("hidden");
                 return;
             }
@@ -412,14 +429,22 @@
             const setData = MASTER_SENTENCE_SETS[inputVal];
             gameState.setName = setData.setName;
 
-            // Pick 10 sentences randomly from pool
+            // Select exactly 10 sentences (repeat pool if fewer than 10)
             let pool = [...setData.pool];
             pool.sort(() => Math.random() - 0.5);
-            gameState.activeSentences = pool.slice(0, 10);
+            gameState.activeSentences = [];
+            while (gameState.activeSentences.length < 10) {
+                for (let sentence of pool) {
+                    if (gameState.activeSentences.length < 10) {
+                        gameState.activeSentences.push(sentence);
+                    }
+                }
+            }
 
-            document.getElementById("header-code").textContent = inputVal;
-            document.getElementById("header-set").textContent = gameState.setName;
+            document.getElementById("set-badge").textContent = `Set: ${gameState.setName}`;
+            document.getElementById("code-badge").textContent = `CODE: ${inputVal}`;
 
+            // Transition to main game view
             document.getElementById("view-access").classList.add("hidden");
             document.getElementById("view-game").classList.remove("hidden");
             document.getElementById("view-game").classList.add("flex");
@@ -433,36 +458,49 @@
             gameState.isPractice = isPractice;
             gameState.isEvaluating = false;
 
-            document.getElementById("header-level").textContent = `Level ${levelNum}`;
+            // Explicitly reset level scoring counters when starting an assessment level
+            if (!isPractice) {
+                gameState.scores[`level${levelNum}`] = {
+                    total: 10,
+                    firstAttempts: 0,
+                    score: 0,
+                    completed: false
+                };
+            }
+
+            document.getElementById("level-badge").textContent = `Level ${levelNum}`;
             document.getElementById("view-complete").classList.add("hidden");
             document.getElementById("view-game").classList.remove("hidden");
+            document.getElementById("view-game").classList.add("flex");
 
             loadQuestion();
         }
 
         function loadQuestion() {
+            // Track if this question is still eligible for first-attempt credit
             gameState.currentQuestionFirstAttemptMade = true;
             gameState.isEvaluating = false;
             document.getElementById("feedback-msg").textContent = "";
             document.getElementById("current-q-num").textContent = gameState.questionIndex + 1;
             document.getElementById("total-q-num").textContent = 10;
 
-            const instructionEl = document.getElementById("level-instruction");
             const audioBtn = document.getElementById("audio-btn");
+            const instructionEl = document.getElementById("level-instruction");
+
             const sentenceStr = gameState.activeSentences[gameState.questionIndex];
 
             if (gameState.level === 1) {
-                audioBtn.classList.remove("hidden");
+                audioBtn.style.display = "flex";
                 instructionEl.textContent = "Listen to the sentence, then arrange the word tiles.";
                 playTargetSentenceAudio();
                 setupLevel1And3Question(sentenceStr);
             } else if (gameState.level === 2) {
-                audioBtn.classList.add("hidden");
-                instructionEl.textContent = "Complete the sentence by placing the missing word in the blank.";
+                audioBtn.style.display = "none";
+                instructionEl.textContent = "Complete the sentence by placing the missing word into the blank slot.";
                 setupLevel2Question(sentenceStr);
             } else if (gameState.level === 3) {
-                audioBtn.classList.add("hidden");
-                instructionEl.textContent = "Unjumble and arrange the word tiles into the correct sentence.";
+                audioBtn.style.display = "none";
+                instructionEl.textContent = "Unjumble and arrange the words into the correct sentence order.";
                 setupLevel1And3Question(sentenceStr);
             }
         }
@@ -478,6 +516,7 @@
             let blankIdx = Math.floor(Math.random() * words.length);
             const correctWord = words[blankIdx];
 
+            // Distractor word generation from sentence set
             let allOtherWords = [];
             gameState.activeSentences.forEach(s => {
                 s.split(/\s+/).forEach(w => {
@@ -495,7 +534,7 @@
             words.forEach((w, idx) => {
                 if (idx === blankIdx) {
                     const slot = document.createElement("div");
-                    slot.className = "drop-slot flex items-center justify-center p-2 m-1";
+                    slot.className = "drop-slot rounded-2xl flex items-center justify-center p-1.5 shadow-sm";
                     slot.dataset.slotIndex = idx;
                     slot.dataset.correctWord = correctWord;
                     slot.addEventListener("dragover", handleDragOver);
@@ -503,7 +542,7 @@
                     slotsContainer.appendChild(slot);
                 } else {
                     const textSpan = document.createElement("span");
-                    textSpan.className = "text-3xl md:text-4xl font-extrabold text-indigo-950 px-2 py-1";
+                    textSpan.className = "text-xl sm:text-2xl md:text-3xl font-black text-purple-950 px-1 py-1";
                     textSpan.textContent = w;
                     slotsContainer.appendChild(textSpan);
                 }
@@ -519,7 +558,7 @@
 
             targetWords.forEach((_, idx) => {
                 const slot = document.createElement("div");
-                slot.className = "drop-slot flex items-center justify-center p-2 m-1";
+                slot.className = "drop-slot rounded-2xl flex items-center justify-center p-1.5 shadow-sm";
                 slot.dataset.slotIndex = idx;
                 slot.addEventListener("dragover", handleDragOver);
                 slot.addEventListener("drop", handleDropToSlot);
@@ -535,10 +574,11 @@
 
             words.forEach((word) => {
                 const tile = document.createElement("div");
-                tile.className = "word-tile";
+                // Light greyish-blue and purple styling for tiles
+                tile.className = "word-tile px-4 py-2 sm:px-5 sm:py-2.5 bg-[#dce3f0] hover:bg-[#c7d5eb] active:bg-[#b5c7e3] text-purple-950 font-black rounded-2xl border-2 sm:border-3 border-[#9d8ec7] shadow-md text-lg sm:text-2xl md:text-3xl";
                 tile.textContent = word;
                 tile.draggable = true;
-                tile.id = `tile-${Math.random().toString(36).substring(2, 11)}`;
+                tile.id = `tile-${Math.random().toString(36).substring(2, 9)}`;
                 
                 tile.addEventListener("dragstart", (e) => {
                     e.dataTransfer.setData("text/plain", tile.id);
@@ -615,7 +655,7 @@
                 if (slot.children.length === 0) {
                     allFilled = false;
                 } else {
-                    userAnswers.push(slot.children[0].textContent);
+                    userAnswers.push(slot.children[0].textContent.trim());
                 }
             });
 
@@ -627,7 +667,7 @@
             
             let isCorrect = false;
             if (gameState.level === 2) {
-                const targetWord = slots[0].dataset.correctWord;
+                const targetWord = slots[0].dataset.correctWord.trim();
                 isCorrect = userAnswers[0].toLowerCase() === targetWord.toLowerCase();
             } else {
                 const targetWords = sentenceStr.split(/\s+/);
@@ -635,29 +675,38 @@
                             userAnswers.every((val, idx) => val.toLowerCase() === targetWords[idx].toLowerCase());
             }
 
+            const mainArea = document.getElementById("main-sentence-area");
+
             if (isCorrect) {
                 playSuccessChime();
-                feedbackEl.textContent = "Correct! ✨";
-                feedbackEl.className = "absolute top-3 text-2xl md:text-3xl font-extrabold text-emerald-600";
+                feedbackEl.textContent = "Fantastic! ✨ Correct!";
+                feedbackEl.className = "absolute bottom-2 font-black text-base sm:text-xl text-center text-emerald-600";
                 
+                mainArea.classList.add("bg-emerald-50", "border-emerald-500");
+                
+                // Record first-attempt credit ONLY if no mistakes were made prior on this question
                 if (!gameState.isPractice && gameState.currentQuestionFirstAttemptMade) {
                     gameState.scores[`level${gameState.level}`].firstAttempts++;
                 }
 
                 setTimeout(() => {
+                    mainArea.classList.remove("bg-emerald-50", "border-emerald-500");
                     nextQuestion();
                 }, 1500);
             } else {
                 playErrorSound();
-                feedbackEl.textContent = "Try again! ❌";
-                feedbackEl.className = "absolute top-3 text-2xl md:text-3xl font-extrabold text-rose-600";
+                feedbackEl.textContent = "Not quite right. Try re-adjusting!";
+                feedbackEl.className = "absolute bottom-2 font-black text-base sm:text-xl text-center text-rose-600";
                 
+                mainArea.classList.add("bg-rose-50", "border-rose-400");
+                
+                // Disqualify this question from first-attempt points upon any wrong attempt
                 gameState.currentQuestionFirstAttemptMade = false;
 
                 setTimeout(() => {
-                    feedbackEl.textContent = "";
+                    mainArea.classList.remove("bg-rose-50", "border-rose-400");
                     gameState.isEvaluating = false;
-                }, 1000);
+                }, 800);
             }
         }
 
@@ -689,6 +738,7 @@
 
         function finishLevel() {
             document.getElementById("view-game").classList.add("hidden");
+            document.getElementById("view-game").classList.remove("flex");
             document.getElementById("view-complete").classList.remove("hidden");
 
             const levelKey = `level${gameState.level}`;
@@ -703,16 +753,16 @@
 
             let band = "";
             let bandColor = "";
-            if (score >= 90) { band = "Excellent"; bandColor = "bg-emerald-100 text-emerald-900 border-emerald-900"; }
-            else if (score >= 75) { band = "Good"; bandColor = "bg-indigo-100 text-indigo-950 border-indigo-950"; }
-            else if (score >= 60) { band = "Developing"; bandColor = "bg-amber-100 text-amber-900 border-amber-900"; }
-            else { band = "Needs Practice"; bandColor = "bg-rose-100 text-rose-900 border-rose-900"; }
+            if (score >= 90) { band = "Excellent"; bandColor = "bg-emerald-100 text-emerald-800"; }
+            else if (score >= 75) { band = "Good"; bandColor = "bg-purple-100 text-purple-900"; }
+            else if (score >= 60) { band = "Developing"; bandColor = "bg-amber-100 text-amber-800"; }
+            else { band = "Needs Practice"; bandColor = "bg-rose-100 text-rose-800"; }
 
             document.getElementById("res-score").textContent = `${score} / 100`;
             document.getElementById("res-first-attempt").textContent = `${firstAttempts} / ${total}`;
             const bandEl = document.getElementById("res-band");
             bandEl.textContent = band;
-            bandEl.className = `px-4 py-1.5 font-extrabold rounded-xl text-xl border-2 ${bandColor}`;
+            bandEl.className = `px-3 py-1 font-bold rounded-xl text-base ${bandColor}`;
 
             const nextBtn = document.getElementById("next-level-btn");
             if (gameState.level === 3) {
@@ -749,22 +799,6 @@
             document.getElementById("form-summary-band").textContent = overallBand;
         }
 
-        /* Standard US 12-Hour Format: M/D/YYYY, H:MM:SS AM/PM */
-        function getUS12HourTimestamp() {
-            const now = new Date();
-            const dateStr = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
-            
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            
-            hours = hours % 12;
-            hours = hours ? hours : 12; // 0 converted to 12
-            
-            return `${dateStr}, ${hours}:${minutes}:${seconds} ${ampm}`;
-        }
-
         function handleFormSubmit(e) {
             e.preventDefault();
 
@@ -779,15 +813,17 @@
             const nameValid = nameWords.length > 0 && nameWords.every(w => w.length > 0 && w[0] === w[0].toUpperCase());
             const errName = document.getElementById("err-name");
             if (!nameValid) {
+                errName.textContent = "Each name component must begin with a capital letter.";
                 errName.classList.remove("hidden");
                 isValid = false;
             } else {
                 errName.classList.add("hidden");
             }
 
-            const numberValid = /^\d+$/.test(number);
-            const errNumber = document.getElementById("err-number");
+            const numberValid = /^\d{1,2}$/.test(number);
+            const errNumber = document.getElementById("1 or2-digit-number");
             if (!numberValid) {
+                errNumber.textContent = "Student number must be a 1 or 2-digit number.";
                 errNumber.classList.remove("hidden");
                 isValid = false;
             } else {
@@ -797,6 +833,7 @@
             const classValid = /^\d+[A-Z]$/.test(classStr);
             const errClass = document.getElementById("err-class");
             if (!classValid) {
+                errClass.textContent = "Class must be formatted as a digit followed by an uppercase letter (e.g. 1A).";
                 errClass.classList.remove("hidden");
                 isValid = false;
             } else {
@@ -805,8 +842,19 @@
 
             if (!isValid) return;
 
+            // Standard US 12-Hour Format: M/D/YYYY, H:MM:SS AM/PM (e.g., 9/24/2026, 9:57:19 AM)
+            const formattedTimestamp = new Date().toLocaleString('en-US', {
+                month: 'numeric',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+
             submitToGoogleSheets({
-                timestamp: getUS12HourTimestamp(),
+                timestamp: formattedTimestamp,
                 accessCode: gameState.accessCode,
                 school: school,
                 studentName: name,
