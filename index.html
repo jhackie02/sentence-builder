@@ -813,17 +813,17 @@
             const nameValid = nameWords.length > 0 && nameWords.every(w => w.length > 0 && w[0] === w[0].toUpperCase());
             const errName = document.getElementById("err-name");
             if (!nameValid) {
-                errName.textContent = "Each name component must begin with a capital letter.";
+                errName.textContent = "Each name component must begin with a capital letter (e.g. John Smith).";
                 errName.classList.remove("hidden");
                 isValid = false;
             } else {
                 errName.classList.add("hidden");
             }
 
-            const numberValid = /^\d{1,2}$/.test(number);
-            const errNumber = document.getElementById("1 or2-digit-number");
+            const numberValid = /^\d+$/.test(number);
+            const errNumber = document.getElementById("err-number");
             if (!numberValid) {
-                errNumber.textContent = "Student number must be a 1 or 2-digit number.";
+                errNumber.textContent = "Student number must contain digits only.";
                 errNumber.classList.remove("hidden");
                 isValid = false;
             } else {
