@@ -358,11 +358,57 @@
                     "What subject do you have on Friday? I have PE class.",
                     "What time is your social studies class? It's at 10:00 AM."
                 ]
-            }
+            },
+            WW1R1: {
+                setName: "Age and Feelings",
+                pool: [
+                    "How old are you?",
+                    "I am ten years old.",
+                    "I am seven.",
+                    "He is eight years old.",
+                    "She is nine.",
+                    "Is he five years old?",
+                    "Is she six?",
+                    "Are you happy?",
+                    "Yes, I am.",
+                    "Are you sad?",
+                    "No, I am not.",
+                    "Is he tired?",
+                    "Yes, he is.",
+                    "Is she hungry?",
+                    "No, she isn't.",
+                    "I am thirsty.",
+                    "He is angry.",
+                    "She is happy.",
+                
+                ]
+            },
+            WW3R1: {
+                setName:"Weather and Time",
+                pool: [
+                    "What time is it?",
+                    "It is three o'clock.",
+                    "It's twelve thirty.",
+                    "It's six fifteen.",
+                    "It is nine forty-five.",
+                    "How's the weather in Tainan?",
+                    "It's sunny and hot.",
+                    "How is the weather in Taipei?",
+                    "No, it is not.",
+                    "Is it rainy?",
+                    "No, it isn't.",
+                    "Is it windy?",
+                    "Yes, it is.",
+                    "Is it cloudy?",
+                    "No, it is not rainy.",
+                    "Is it nine o'clock?",
+                
+                ]
+            },
         };
 
         // Game Runtime State
-        let gameState = {
+            let gameState = {
             accessCode: "",
             setName: "",
             activeSentences: [], // Exactly 10 sentences used across all 3 levels
@@ -376,12 +422,12 @@
             },
             currentQuestionFirstAttemptMade: true,
             isEvaluating: false
-        };
+            }
 
         // Web Audio Synthesizer for sound effects
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        function playPopSound() {
+            function playPopSound() {
             try {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
@@ -737,7 +783,7 @@
 
             const sentenceStr = gameState.activeSentences[gameState.questionIndex];
             const utterance = new SpeechSynthesisUtterance(sentenceStr);
-            utterance.rate = 0.85;
+            utterance.rate = 0.75;
             utterance.pitch = 1.0;
             utterance.lang = 'en-US';
             window.speechSynthesis.speak(utterance);
