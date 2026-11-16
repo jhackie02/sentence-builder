@@ -384,31 +384,50 @@
                 ]
             },
             WW3R1: {
-                setName:"Weather and Time",
+                setName: "Weather and Time",
                 pool: [
                     "What time is it?",
-                    "It is three o'clock.",
+                    "It's three o'clock.",
                     "It's twelve thirty.",
                     "It's six fifteen.",
-                    "It is nine forty-five.",
+                    "It's nine forty-five.",
                     "How's the weather in Tainan?",
                     "It's sunny and hot.",
-                    "How is the weather in Taipei?",
-                    "No, it is not.",
+                    "Yes, it is.",
                     "Is it rainy?",
                     "No, it isn't.",
                     "Is it windy?",
                     "Yes, it is.",
                     "Is it cloudy?",
-                    "No, it is not rainy.",
-                    "Is it nine o'clock?",
-                
+                    "No, it isn't.",
+                    "Is it nine o'clock?"
                 ]
-            },
-        };
+            }, 
+            WW5U3: {
+                setName: "Days of the Week",
+                pool: [
+                    "What day is today?",
+                    "Today is Monday.",
+                    "Today is Tuesday.",
+                    "No, it isn't.",
+                    "Yes, it is.",
+                    "No, it isn't. It's Thursday.",
+                    "Today is Friday.",
+                    "It's Saturday.",
+                    "No, it isn't. It's Sunday.",
+                    "Is it Monday today?",
+                    "Is it Tuesday today?",
+                    "Is it Wednesday today?",
+                    "Is it Thursday today?",
+                    "Is it Friday today?",
+                    "Is it Saturday today?",
+                    "Is it Sunday today?"
+                ]
+            }
+        }
 
         // Game Runtime State
-            let gameState = {
+        let gameState = {
             accessCode: "",
             setName: "",
             activeSentences: [], // Exactly 10 sentences used across all 3 levels
@@ -422,12 +441,12 @@
             },
             currentQuestionFirstAttemptMade: true,
             isEvaluating: false
-            }
+        }
 
         // Web Audio Synthesizer for sound effects
-             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-            function playPopSound() {
+        function playPopSound() {
             try {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
@@ -442,7 +461,7 @@
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.06);
             } catch(e) {}
-        }
+        };
 
         function playSuccessChime() {
             try {
@@ -783,7 +802,7 @@
 
             const sentenceStr = gameState.activeSentences[gameState.questionIndex];
             const utterance = new SpeechSynthesisUtterance(sentenceStr);
-            utterance.rate = 0.75;
+            utterance.rate = 0.85;
             utterance.pitch = 1.0;
             utterance.lang = 'en-US';
             window.speechSynthesis.speak(utterance);
