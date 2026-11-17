@@ -577,6 +577,9 @@
                 };
             }
 
+            // Track first-attempt status independently for each of the 10 questions
+            gameState.questionFirstAttempts = new Array(10).fill(true);
+
             document.getElementById("level-badge").textContent = `Level ${levelNum}`;
             document.getElementById("view-complete").classList.add("hidden");
             document.getElementById("view-game").classList.remove("hidden");
@@ -585,9 +588,7 @@
             loadQuestion();
         }
 
-        function loadQuestion() {
-            // Track if this question is still eligible for first-attempt credit
-            gameState.currentQuestionFirstAttemptMade = true;
+    function loadQuestion() {
             gameState.isEvaluating = false;
             document.getElementById("feedback-msg").textContent = "";
             document.getElementById("current-q-num").textContent = gameState.questionIndex + 1;
@@ -755,7 +756,7 @@
             checkCompletionAndValidate();
         }
 
-        function checkCompletionAndValidate() {
+    function checkCompletionAndValidate() {
             const slots = document.querySelectorAll(".drop-slot");
             let allFilled = true;
             let userAnswers = [];
@@ -793,8 +794,8 @@
                 
                 mainArea.classList.add("bg-emerald-50", "border-emerald-500");
                 
-                // Record first-attempt credit ONLY if no mistakes were made prior on this question
-                if (!gameState.isPractice && gameState.currentQuestionFirstAttemptMade) {
+                // Award first-attempt credit ONLY if this specific question had no prior mistakes
+                if (!gameState.isPractice && gameState.questionFirstAttempts[gameState.questionIndex]) {
                     gameState.scores[`level${gameState.level}`].firstAttempts++;
                 }
 
@@ -809,8 +810,8 @@
                 
                 mainArea.classList.add("bg-rose-50", "border-rose-400");
                 
-                // Disqualify this question from first-attempt points upon any wrong attempt
-                gameState.currentQuestionFirstAttemptMade = false;
+                // Permanently mark this specific question's first attempt as failed
+                gameState.questionFirstAttempts[gameState.questionIndex] = false;
 
                 setTimeout(() => {
                     mainArea.classList.remove("bg-rose-50", "border-rose-400");
@@ -833,7 +834,19 @@
 
         function resetCurrentQuestion() {
             if (gameState.isEvaluating) return;
-            loadQuestion();
+            
+            // Move all placed tiles back to the word bank
+            const slots = document.querySelectorAll(".drop-slot");
+            const bank = document.getElementById("word-bank");
+            
+            slots.forEach(slot => {
+                if (slot.children.length > 0) {
+                    bank.appendChild(slot.children[0]);
+                }
+            });
+
+            document.getElementById("feedback-msg").textContent = "";
+            playPopSound();
         }
 
         function nextQuestion() {
